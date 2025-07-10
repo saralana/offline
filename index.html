@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Test téléchargement audio offline</title>
+</head>
+<body>
+  <h1>Test téléchargement audio offline</h1>
+  <button id="download">Télécharger les audios</button>
+  <br /><br />
+  <audio id="player" controls></audio>
+  <br /><br />
+  <button onclick="playAudio('audio1.mp3')">Jouer audio 1</button>
+  <button onclick="playAudio('audio2.mp3')">Jouer audio 2</button>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log('Service Worker enregistré'));
+    } else {
+      alert('Service Worker non supporté');
+    }
+
+    document.getElementById('download').addEventListener('click', () => {
+      caches.open('audio-cache').then(cache => {
+        cache.addAll(['audio1.mp3', 'audio2.mp3']);
+        alert('Audios téléchargés et en cache !');
+      });
+    });
+
+    function playAudio(file) {
+      const player = document.getElementById('player');
+      player.src = file;
+      player.play();
+    }
+  </script>
+</body>
+</html>
